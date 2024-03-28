@@ -1,0 +1,1 @@
+export { default as Estrio } from './Estrio'

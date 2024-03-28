@@ -1,0 +1,38 @@
+{
+  "name": "estrio",
+  "version": "0.1.0",
+  "description": "Simple S3 Uploader",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rollup": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usalko/estrio.git"
+  },
+  "keywords": [
+    "s3"
+  ],
+  "author": "Usalko Vanya <ivict@rambler.ru>",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/usalko/estrio/issues"
+  },
+  "homepage": "https://github.com/usalko/estrio#readme",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/react": "^18.2.73",
+    "react": "^18.2.0",
+    "rollup": "^4.13.2",
+    "rollup-plugin-dts": "^6.1.0",
+    "typescript": "^5.4.3"
+  }
+}
