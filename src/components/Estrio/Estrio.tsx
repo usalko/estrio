@@ -1,11 +1,17 @@
 import React from 'react'
 
 export interface EstrioProps {
-  label: string
+    name: string,
+    acceptedFileTypes?: string,
+    inputProps?: any
 }
 
-const Estrio = (props: EstrioProps) => {
-  return <button>{props.label}</button>
+const Estrio = ({
+    name,
+    acceptedFileTypes='.*',
+    inputProps={},
+}: EstrioProps) => {
+    return <input type='file' accept={acceptedFileTypes} name={name} {...inputProps} style={{ display: 'none' }}></input>
 }
 
 export default Estrio
