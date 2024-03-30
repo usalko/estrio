@@ -8,7 +8,8 @@ describe('Estrio', () => {
 
     beforeEach(() => {
         props = {
-            name: 'estrio-reference-1'
+            name: 'estrio-reference-1',
+            dataTestId: 'test-component',
         }
     })
 
