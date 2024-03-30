@@ -10,7 +10,8 @@
   ],
   "types": "dist/index.d.ts",
   "scripts": {
-    "rollup": "rollup -c"
+    "rollup": "rollup -c",
+    "test-storybook": "test-storybook"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-typescript": "^11.1.6",
     "@storybook/react": "^8.0.5",
+    "@storybook/test-runner": "^0.17.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.2",
     "@types/crypto-js": "^4.2.2",
