@@ -16,4 +16,8 @@ const Estrio = ({
     return <input type='file' accept={acceptedFileTypes} name={name} {...inputProps} style={{ display: 'none' }} data-testid={dataTestId}></input>
 }
 
+// GET
+// LIST
+// PUT
+
 export default Estrio
