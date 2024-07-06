@@ -7,10 +7,28 @@ export interface EstrioProps {
     dataTestId?: string,
 }
 
+class GetCommand<T> {
+    url: string
+
+    constructor(url: string) {
+        this.url = url
+    }
+
+    execute(): Promise<T> {
+        return fetch(this.url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText)
+                }
+                return response.json() as Promise<T>
+            })
+    }
+}
+
 const Estrio = ({
     name,
-    acceptedFileTypes='.*',
-    inputProps={},
+    acceptedFileTypes = '.*',
+    inputProps = {},
     dataTestId,
 }: EstrioProps) => {
     return <input type='file' accept={acceptedFileTypes} name={name} {...inputProps} style={{ display: 'none' }} data-testid={dataTestId}></input>
