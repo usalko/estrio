@@ -25,6 +25,44 @@ class GetCommand<T> {
     }
 }
 
+class ListCommand<T> {
+    url: string
+
+    constructor(url: string) {
+        this.url = url
+    }
+
+    execute(): Promise<T> {
+        return fetch(this.url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText)
+                }
+                return response.json() as Promise<T>
+            })
+    }
+}
+
+class PutCommand<T> {
+    url: string
+
+    constructor(url: string) {
+        this.url = url
+    }
+
+    execute(): Promise<T> {
+        return fetch(this.url, {
+            method: 'PUT',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText)
+                }
+                return response.json() as Promise<T>
+            })
+    }
+}
+
 const Estrio = ({
     name,
     acceptedFileTypes = '.*',
