@@ -1,13 +1,9 @@
-import React from 'react'
 
-export interface EstrioProps {
-    name: string,
-    acceptedFileTypes?: string,
-    inputProps?: any,
-    dataTestId?: string,
+export interface EstrioCommand<T> {
+    url: string
 }
 
-class GetCommand<T> {
+class GetCommand<T> implements EstrioCommand<T> {
     url: string
 
     constructor(url: string) {
@@ -25,7 +21,7 @@ class GetCommand<T> {
     }
 }
 
-class ListCommand<T> {
+class ListCommand<T> implements EstrioCommand<T> {
     url: string
 
     constructor(url: string) {
@@ -43,7 +39,7 @@ class ListCommand<T> {
     }
 }
 
-class PutCommand<T> {
+class PutCommand<T> implements EstrioCommand<T> {
     url: string
 
     constructor(url: string) {
@@ -63,17 +59,3 @@ class PutCommand<T> {
     }
 }
 
-const Estrio = ({
-    name,
-    acceptedFileTypes = '.*',
-    inputProps = {},
-    dataTestId,
-}: EstrioProps) => {
-    return <input type='file' accept={acceptedFileTypes} name={name} {...inputProps} style={{ display: 'none' }} data-testid={dataTestId}></input>
-}
-
-// GET
-// LIST
-// PUT
-
-export default Estrio

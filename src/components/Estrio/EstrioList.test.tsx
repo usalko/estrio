@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react'
 import React from 'react'
 
-import Estrio, { EstrioProps } from './Estrio'
+import EstrioList, { EstrioListProps } from './EstrioList'
 
-describe('Estrio', () => {
-    let props: EstrioProps
+describe('EstrioList', () => {
+    let props: EstrioListProps
 
     beforeEach(() => {
         props = {
@@ -13,7 +13,7 @@ describe('Estrio', () => {
         }
     })
 
-    const renderComponent = () => render(<Estrio {...props} />)
+    const renderComponent = () => render(<EstrioList {...props} />)
 
     it('should have name property with default props', () => {
         const { getByTestId } = renderComponent()
