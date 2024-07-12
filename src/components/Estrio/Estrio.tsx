@@ -59,3 +59,8 @@ class PutCommand<T> implements EstrioCommand<T> {
     }
 }
 
+class Estrio {
+
+}
+
+export default Estrio
