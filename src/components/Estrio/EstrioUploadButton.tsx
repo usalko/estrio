@@ -45,7 +45,7 @@ export interface EstrioUploadButtonProps {
 const EstrioUploadButton = ({
     name,
     acceptedFileTypes = '.*',
-    inputProps = {},
+    inputProps: additionalProps = {},
     dataTestId,
     label = '',
 }: EstrioUploadButtonProps) => {
@@ -54,7 +54,7 @@ const EstrioUploadButton = ({
         (hiddenInputRef?.current as any)?.click()
     }
     return <div
-        {...inputProps}>
+        {...additionalProps}>
         {label ? <button onClick={handleClick}>{label}</button> : ''}
         <input
             ref={hiddenInputRef}
