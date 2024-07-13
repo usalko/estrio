@@ -8,6 +8,12 @@ export default {
 
 export const Primary: StoryObj = (args) => <EstrioUploadButton {...args} />
 Primary.args = {
-    label: 'EstrioUploadButton',
+    label: 'Upload file to S3 storage',
     primary: true,
+}
+
+export const Secondary: StoryObj = (args) => <EstrioUploadButton {...args} />
+Secondary.args = {
+    label: 'Upload zip file to S3 storage',
+    acceptedFileTypes: '*.zip',
 }
