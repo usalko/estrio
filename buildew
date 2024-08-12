@@ -1,0 +1,170 @@
+#!/bin/bash
+
+NPM_VERSION=10.7.0
+COMMAND=$1
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+    --python-version)
+        NPM_VERSION="$2"
+        shift
+        shift
+        ;;
+    *)
+        COMMAND=$1
+        shift
+        break
+        ;;
+    esac
+    shift
+done
+
+NPM=python$NPM_VERSION
+# CHECK NPM
+if command -v "$NPM" &>/dev/null; then
+    echo Node package manager "npm" available
+else
+    echo Npm not available, please install it or add to the PATH variable
+    exit 1
+fi
+
+# CHECK NODE MODULES FOLDER IS NOT EXISTS
+if [ ! -d node_modules ]; then
+
+    $NPM i
+fi
+
+if [ -f '.env' ]; then
+    echo Use .env file to read sensitive information
+    while IPS='=' read -r key _; do
+        if [ "${key}" != "" ] && [[ ! "${key}" =~ .*#.* ]]; then
+            eval "export ${key}"
+        fi
+    done <'.env'
+else
+    # REGENERATE SENSITIVE INFO FROM TEMPLATE
+    cat >'.env' <<EOF
+EOF
+fi
+
+echo EXECUTE
+echo "=========== $COMMAND"
+echo "$COMMAND ==========="
+echo COMMAND
+
+SERVICES=('s2d3')
+
+if [ "$COMMAND" == "redeps" ]; then
+    echo "Reinstall dependencies"
+    $NPM i
+fi
+
+if [ "$COMMAND" == "clean" ]; then
+    echo "Clean temporary folders"
+    find . -name __pycache__ -print0 | xargs -0 rm -fr
+fi
+
+#                                    #
+# DOCKER INFRASTRACTURE AND COMMANDS #
+#                                    #
+
+function check_folder {
+    FOLDER=$1
+    mkdir -p "$FOLDER" || exit 1
+    chmod a+rwx "$FOLDER"
+    for SERVICE in "${SERVICES[@]}"; do
+        mkdir -p "$FOLDER/$SERVICE" || exit 1
+        chmod a+rwx "$FOLDER/$SERVICE"
+    done
+}
+
+function check_history_folder {
+    FOLDER=.history
+    mkdir -p $FOLDER || exit 1
+    chmod a+rwx $FOLDER
+    for SERVICE in "${SERVICES[@]}"; do
+        mkdir -p "$FOLDER/$SERVICE" || exit 1
+        chmod a+rwx "$FOLDER/$SERVICE"
+        touch "$FOLDER/$SERVICE/.bash_history"
+        chmod a+rwx "$FOLDER/$SERVICE/.bash_history"
+    done
+}
+
+function start {
+    # Check the data folders
+    check_folder .data
+
+    # Sync Images, TODO: put on s3 storage
+    # cp back/app/static/images/photo_2021-11-10_11-15-00.jpg .data/front/images/cover
+
+    # Check the temporary folders
+    check_folder .tmp
+
+    # Check the logger folders
+    check_folder .logs
+
+    # Check the history folders
+    check_history_folder
+
+    if [ "$1" == "" ]; then
+        docker-compose up
+    else
+        docker-compose up "$@"
+    fi
+}
+
+if [ "$COMMAND" == "up" ] || [ "$COMMAND" == "start" ]; then
+    echo 'Run docker images'
+
+    start "$@"
+
+fi
+
+function stop {
+    if [ "$1" == "" ]; then
+        docker-compose down -v
+    else
+        docker-compose stop "$@"
+    fi
+}
+
+if [ "$COMMAND" == "stop" ] || [ "$COMMAND" == "down" ] || [ "$COMMAND" == "finish" ]; then
+    echo 'Stop docker images'
+
+    stop "$@"
+fi
+
+if [ "$COMMAND" == "restart" ]; then
+    echo 'Restart services or whole system'
+    stop "$@"
+    start "$@"
+fi
+
+if [ "$COMMAND" == "publish" ]; then
+    echo 'TODO: Publish package to npm repository'
+fi
+
+#========================================== LOGS ==================================================
+if [ "$COMMAND" == "log" ]; then
+    if [ "$*" == "" ]; then
+        echo 'Show logs tail <= 10000 entries'
+        docker-compose logs -f --tail 10000
+    else
+        echo "Show logs (docker compose logs -f $*)"
+        docker-compose logs -f "$@"
+    fi
+fi
+if [ "$COMMAND" == "logs" ]; then
+    if [ "$*" == "" ]; then
+        echo 'Show logs with timestamp tail <= 10000 entries'
+        docker-compose logs -f --tail 10000 --timestamps
+    else
+        echo "Show logs with timestamp (docker compose logs -f --timestamps $*)"
+        docker-compose logs -f --timestamps "$@"
+    fi
+fi
+
+# =================================================================================================
+
+AVAILABLE_COMMANDS="run build up start stop down finish restart logs publish"
+echo ''
+[[ $AVAILABLE_COMMANDS =~ (^| )$COMMAND($| ) ]] && echo 'Ok' || (echo 'Unknown command: ' "$COMMAND" && echo 'Available commands are: ' "$AVAILABLE_COMMANDS")
